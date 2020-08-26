@@ -2,10 +2,10 @@
  * Copyright (C) 2017 by Alex Fosdick - University of Colorado
  *
  * Redistribution, modification or use of this software in source or binary
- * forms is permitted as long as the files maintain this copyright. Users are 
+ * forms is permitted as long as the files maintain this copyright. Users are
  * permitted to modify this and use it to learn about the field of embedded
  * software. Alex Fosdick and the University of Colorado are not liable for any
- * misuse of this material. 
+ * misuse of this material.
  *
  *****************************************************************************/
 /**
@@ -33,7 +33,7 @@ int main(void) {
 
   /* Code below does some arbitrary memory Reads & writes */
   clear_all(buffer, MAX_LENGTH);
-  set_all( ( buffer + 8 ), 43, 2); 
+  set_all( ( buffer + 8 ), 43, 2);
   set_value(buffer, 0, 0x61);
   value = get_value(buffer, 9);
   set_value(buffer, 9, (value + 0x27));
@@ -51,4 +51,3 @@ int main(void) {
   PRINTF("\n");
   return 0;
 }
-

@@ -33,41 +33,43 @@ include sources.mk
 
 # Platform Overrides
 PLATFORM = HOST
-
 # Generic variable defines
 BASENAME = c1m2
 TARGET = $(BASENAME).out
+COMMON = -Wall -Werror -g -O0 -std=c99
 
-# Generate .o and .d for corresponding .c
-OBJS = $(SOURCES:.c=.o)
+# Generate files for corresponding .c
+PREP = $(SOURCES:.c=.i)
+ASMB = $(SOURCES:.c=.asm)
 DEPS = $(SOURCES:.c=.d)
+OBJS = $(SOURCES:.c=.o)
 
 # Architectures Specific Flags
 CPU = cortex-m4
 ARCH = thumb
 SPECS = nosys.specs
-LINKER_FILE = ../msp432p401r.lds
 
 # Compiler Flags and Defines
 ifeq ($(PLATFORM), HOST)
-	CC = gcc
-	ASM = objdump -d
-	LD = ld
-	CFLAGS =  -Wall -Werror -g -O0 -std=c99
+	CC       = gcc
+	ASM      = objdump -d
+	LD       = ld
+	CFLAGS   = $(COMMON)
 	CPPFLAGS = -DHOST
-	LDFLAGS = -Wl,-Map=$(BASENAME).map
-	SIZE = size
+	LDFLAGS  = -Wl,-Map=$(BASENAME).map
+	SIZE     = size
 else
-	CC = arm-none-eabi-gcc
-	ASM = arm-none-eabi-objdump -d
-	LD = arm-none-eabi-ld
-	CFLAGS = -Wall -Werror -g -O0 -std=c99 -mfpu=fpv4-sp-d16 \
-           -mfloat-abi=softfp -march=armv7e-m -mcpu=$(CPU) -m$(ARCH) \
-					 --specs=$(SPECS) -fno-exceptions -ffreestanding -flto
-	CPPFLAGS = -DMSP432
-	LDFLAGS = -Wl,-Map=$(BASENAME).map -T $(LINKER_FILE) -flto \
-						-ffreestanding -nostdlib
-	SIZE = arm-none-eabi-size
+	CC          = arm-none-eabi-gcc
+	ASM         = arm-none-eabi-objdump -d
+	LD          = arm-none-eabi-ld
+	CFLAGS      = $(COMMON) -mfpu=fpv4-sp-d16 \
+                -mfloat-abi=softfp -march=armv7e-m -mcpu=$(CPU) -m$(ARCH) \
+					      --specs=$(SPECS) -fno-exceptions -ffreestanding -flto
+	CPPFLAGS    = -DMSP432
+	LINKER_FILE = ../msp432p401r.lds
+	LDFLAGS     = -Wl,-Map=$(BASENAME).map -T $(LINKER_FILE) -flto \
+	   						-ffreestanding -nostdlib
+	SIZE        = arm-none-eabi-size
 endif
 
 # Make recipes start
@@ -85,8 +87,7 @@ endif
 
 # Dependency file recipe
 %.d : %.c
-	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -MM -MT '$(patsubst %.c,%.o,$<)' \
-	$< -MF $@
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -M $< -o $@
 
 # All source files compile only recipe
 compile-all : $(OBJS) $(DEPS)
@@ -96,6 +97,7 @@ build : $(TARGET)
 $(TARGET) : compile-all
 	$(CC) $(LDFLAGS) -o $@ $(OBJS)
 	$(ASM) $(TARGET) > $(BASENAME).asm
+	$(SIZE) -Atx $(TARGET)
 	$(SIZE) $(TARGET)
 
 # Cleaning recipe

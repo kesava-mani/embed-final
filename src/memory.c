@@ -2,10 +2,10 @@
  * Copyright (C) 2017 by Alex Fosdick - University of Colorado
  *
  * Redistribution, modification or use of this software in source or binary
- * forms is permitted as long as the files maintain this copyright. Users are 
+ * forms is permitted as long as the files maintain this copyright. Users are
  * permitted to modify this and use it to learn about the field of embedded
  * software. Alex Fosdick and the University of Colorado are not liable for any
- * misuse of this material. 
+ * misuse of this material.
  *
  *****************************************************************************/
 /**
@@ -48,3 +48,16 @@ void clear_all(char * ptr, unsigned int size){
   set_all(ptr, 0, size);
 }
 
+
+
+int32_t* reserve_words(size_t length) {
+
+	int32_t *ptr;
+	ptr  = ( int32_t *)malloc(length * sizeof(int32_t));
+
+	return ptr;
+}
+
+void free_words(uint32_t * src){
+	free(src);
+}
