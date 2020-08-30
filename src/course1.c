@@ -2,14 +2,14 @@
  * Copyright (C) 2017 by Alex Fosdick - University of Colorado
  *
  * Redistribution, modification or use of this software in source or binary
- * forms is permitted as long as the files maintain this copyright. Users are 
+ * forms is permitted as long as the files maintain this copyright. Users are
  * permitted to modify this and use it to learn about the field of embedded
  * software. Alex Fosdick and the University of Colorado are not liable for any
- * misuse of this material. 
+ * misuse of this material.
  *
  *****************************************************************************/
 /**
- * @file course1.c 
+ * @file course1.c
  * @brief This file is to be used to course 1 final assessment.
  *
  * @author Alex Fosdick
@@ -38,9 +38,9 @@ int8_t test_data1() {
     return TEST_ERROR;
   }
 
-  digits = my_itoa( num, ptr, BASE_16);   
+  digits = my_itoa( num, ptr, BASE_16);
   value = my_atoi( ptr, digits, BASE_16);
-  #ifdef VERBOSE
+  #if defined VERBOSE
   PRINTF("  Initial number: %d\n", num);
   PRINTF("  Final Decimal number: %d\n", value);
   #endif
@@ -69,7 +69,7 @@ int8_t test_data2() {
 
   digits = my_itoa( num, ptr, BASE_10);
   value = my_atoi( ptr, digits, BASE_10);
-  #ifdef VERBOSE
+  #if defined VERBOSE
   PRINTF("  Initial Decimal number: %d\n", num);
   PRINTF("  Final Decimal number: %d\n", value);
   #endif
@@ -92,14 +92,14 @@ int8_t test_memmove1() {
   PRINTF("test_memmove1() - NO OVERLAP\n");
   set = (uint8_t*) reserve_words( MEM_SET_SIZE_W );
 
-  if (! set ) 
+  if (! set )
   {
     return TEST_ERROR;
   }
-  
+
   ptra = &set[0];
   ptrb = &set[16];
-  
+
   /* Initialize the set to test values */
   for( i = 0; i < MEM_SET_SIZE_B; i++)
   {
@@ -170,7 +170,7 @@ int8_t test_memmove3() {
   PRINTF("test_memove3() - OVERLAP END OF DEST BEGINNING OF SRC\n");
   set = (uint8_t*)reserve_words( MEM_SET_SIZE_W);
 
-  if (! set ) 
+  if (! set )
   {
     return TEST_ERROR;
   }
@@ -211,7 +211,7 @@ int8_t test_memcopy() {
   PRINTF("test_memcopy()\n");
   set = (uint8_t*) reserve_words(MEM_SET_SIZE_W);
 
-  if (! set ) 
+  if (! set )
   {
     return TEST_ERROR;
   }
@@ -239,7 +239,7 @@ int8_t test_memcopy() {
   return ret;
 }
 
-int8_t test_memset() 
+int8_t test_memset()
 {
   uint8_t i;
   uint8_t ret = TEST_NO_ERROR;
@@ -257,7 +257,7 @@ int8_t test_memset()
   ptrb = &set[16];
 
   /* Initialize the set to test values */
-  for( i = 0; i < MEM_SET_SIZE_B; i++) 
+  for( i = 0; i < MEM_SET_SIZE_B; i++)
   {
     set[i] = i;
   }
@@ -267,7 +267,7 @@ int8_t test_memset()
   print_array(set, MEM_SET_SIZE_B);
   my_memzero(ptrb, MEM_ZERO_LENGTH);
   print_array(set, MEM_SET_SIZE_B);
-  
+
   /* Validate Set & Zero Functionality */
   for (i = 0; i < MEM_ZERO_LENGTH; i++)
   {
@@ -280,7 +280,7 @@ int8_t test_memset()
       ret = TEST_ERROR;
     }
   }
-  
+
   free_words( (uint32_t*)set );
   return ret;
 }
@@ -302,7 +302,7 @@ int8_t test_reverse()
   {
     return TEST_ERROR;
   }
-  
+
   my_memcopy(set, copy, MEM_SET_SIZE_B);
 
   print_array(set, MEM_SET_SIZE_B);
@@ -321,7 +321,7 @@ int8_t test_reverse()
   return ret;
 }
 
-void course1(void) 
+void course1(void)
 {
   uint8_t i;
   int8_t failed = 0;
@@ -336,7 +336,7 @@ void course1(void)
   results[6] = test_memset();
   results[7] = test_reverse();
 
-  for ( i = 0; i < TESTCOUNT; i++) 
+  for ( i = 0; i < TESTCOUNT; i++)
   {
     failed += results[i];
   }

@@ -16,7 +16,7 @@
  * The function and variable declaration for this are done in this file.
  *
  * @author Kesava Mani U
- * @date August 10, 2020.
+ * @date August 2020.
  *
  */
 
@@ -24,24 +24,8 @@
 #ifndef __STATS_H__
 #define __STATS_H__
 
-/* Add Your Declarations and Function Comments here */
-#define FALSE  (0)
-#define TRUE   (1)
-
-/**
- * @brief Error status codes
- *
- * Enumerating the status of the function for error checking
- *
- */
-typedef enum {
-              OK = 0,
-              ERR_NULL,
-              ERR_LOGIC,
-              ERR_TIMEOUT
-}en_status_t;
-
-
+#include "platform.h"
+#include <stddef.h>
 /**
  * @brief Prints the statistics of input data.
  *

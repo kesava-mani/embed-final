@@ -11,12 +11,14 @@
 
 # Add your Source files and Include to this variable
 ifeq ($(PLATFORM), HOST)
-	SOURCES =  main.c memory.c
-	INCLUDES = -I../include/common
+	SOURCES =  main.c memory.c stats.c data.c course1.c
+	INCLUDES = -I./include/common
 else
-	SOURCES = main.c memory.c \
+	SOURCES = main.c memory.c stats.c data.c course1.c \
 						interrupts_msp432p401r_gcc.c \
 						startup_msp432p401r_gcc.c \
 						system_msp432p401r.c
-	INCLUDES = -I../include/CMSIS -I../include/msp432 -I../include/common
+	INCLUDES = -I./include/CMSIS \
+						 -I./include/msp432 \
+						 -I./include/common
 endif

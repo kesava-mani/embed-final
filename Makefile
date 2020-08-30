@@ -19,9 +19,9 @@
 #      <file>.asm - generates the corresponding assembly file
 #      <file>.o - generates the corresponding object file
 #      <file>.d - generates the corresponding dependency file
-#      compile-all - compiles all c files in current directory
+#      compile-all - compiles all c files in ./src directory
 #      build  - compiles and links to produce executable  in current directory.
-#								Also, the corresponding assembly is generated.
+#								Also, the corresponding map and assembly is generated.
 #      clean - cleans all generated files such as .o, .i, .d, .asm,
 # 						 .map, .out in current directory
 #
@@ -33,10 +33,12 @@ include sources.mk
 
 # Platform Overrides
 PLATFORM = HOST
+
 # Generic variable defines
-BASENAME = c1m2
-TARGET = $(BASENAME).out
-COMMON = -Wall -Werror -g -O0 -std=c99
+VPATH     =./src
+BASENAME  = c1_final
+TARGET    = $(BASENAME).out
+COMMON    = -Wall -Werror -g -O0 -std=c99
 
 # Generate files for corresponding .c
 PREP = $(SOURCES:.c=.i)
@@ -45,30 +47,32 @@ DEPS = $(SOURCES:.c=.d)
 OBJS = $(SOURCES:.c=.o)
 
 # Architectures Specific Flags
-CPU = cortex-m4
-ARCH = thumb
+CPU   = cortex-m4
+ARCH  = thumb
 SPECS = nosys.specs
+
+ifeq ($(VERBOSE), YES)
+	VER_VALUE = TRUE
+else
+	VER_VALUE = FALSE
+endif
 
 # Compiler Flags and Defines
 ifeq ($(PLATFORM), HOST)
-	CC       = gcc
-	ASM      = objdump -d
-	LD       = ld
-	CFLAGS   = $(COMMON)
-	CPPFLAGS = -DHOST
-	LDFLAGS  = -Wl,-Map=$(BASENAME).map
-	SIZE     = size
+	CC          = gcc
+	ASM         = objdump -d
+	CFLAGS      = $(COMMON)
+	CPPFLAGS    = -D$(PLATFORM) -DVERBOSE=$(VER_VALUE) -DCOURSE1
+	LDFLAGS     = -Wl,-Map=$(BASENAME).map
+	SIZE        = size
 else
 	CC          = arm-none-eabi-gcc
 	ASM         = arm-none-eabi-objdump -d
-	LD          = arm-none-eabi-ld
 	CFLAGS      = $(COMMON) -mfpu=fpv4-sp-d16 \
-                -mfloat-abi=softfp -march=armv7e-m -mcpu=$(CPU) -m$(ARCH) \
-					      --specs=$(SPECS) -fno-exceptions -ffreestanding -flto
-	CPPFLAGS    = -DMSP432
-	LINKER_FILE = ../msp432p401r.lds
-	LDFLAGS     = -Wl,-Map=$(BASENAME).map -T $(LINKER_FILE) -flto \
-	   						-ffreestanding -nostdlib
+                -mfloat-abi=softfp -march=armv7e-m -mcpu=$(CPU) -m$(ARCH)
+	CPPFLAGS    = -D$(PLATFORM) -DVERBOSE=$(VER_VALUE) -DCOURSE1
+	LINKER_FILE = ./msp432p401r.lds
+	LDFLAGS     = -Wl,-Map=$(BASENAME).map -T $(LINKER_FILE) --specs=$(SPECS)
 	SIZE        = arm-none-eabi-size
 endif
 
@@ -90,12 +94,11 @@ endif
 	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -M $< -o $@
 
 # All source files compile only recipe
-compile-all : $(OBJS) $(DEPS)
+compile-all : $(OBJS) #$(DEPS)
 
 # Spotlight recipe
-build : $(TARGET)
-$(TARGET) : compile-all
-	$(CC) $(LDFLAGS) -o $@ $(OBJS)
+build : compile-all
+	$(CC) $(LDFLAGS) $(OBJS) -o $(TARGET)
 	$(ASM) $(TARGET) > $(BASENAME).asm
 	$(SIZE) -Atx $(TARGET)
 	$(SIZE) $(TARGET)

@@ -16,18 +16,24 @@
  * are not to change any of the code, they are instead supposed to compile
  * these files with their makefile.
  *
- * @author Alex Fosdick
- * @date April 1 2017
+ * @author Kesava Mani
+ * @date Auguest 2020
  *
  */
+
+#include "course1.h"
 #include "platform.h"
 #include "memory.h"
+#include "data.h"
 
 #define MAX_LENGTH (10)
 char buffer[MAX_LENGTH];
 
 /* A pretty boring main file */
 int main(void) {
+#if defined COURSE1
+  course1();
+#else
   unsigned int i;
   char value;
 
@@ -49,5 +55,7 @@ int main(void) {
     PRINTF("%c", buffer[i]);
   }
   PRINTF("\n");
+#endif // COURSE1
+
   return 0;
 }
