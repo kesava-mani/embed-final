@@ -31,3 +31,8 @@ The sources to be included in the build must be added in sources.mk file.
 This file is included in Makefile using include directive.
 Refer to the Makefile for the available targets.
 Targets are built in the project root directory.
+
+To build with verbose option, pass VERBOSE=YES.
+```bash
+make build PLATFORM=HOST VERBOSE=YES
+```

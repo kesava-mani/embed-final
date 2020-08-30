@@ -33,6 +33,7 @@ include sources.mk
 
 # Platform Overrides
 PLATFORM = HOST
+VER_VALUE = FALSE
 
 # Generic variable defines
 VPATH     =./src
@@ -53,8 +54,6 @@ SPECS = nosys.specs
 
 ifeq ($(VERBOSE), YES)
 	VER_VALUE = TRUE
-else
-	VER_VALUE = FALSE
 endif
 
 # Compiler Flags and Defines
