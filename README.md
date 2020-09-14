@@ -25,7 +25,7 @@ This project implements
 Refer to respective header file for documentation about the function.
 
 ### Build
-Build system utilize make. Makefile for the project shall be found in ./src
+Build system utilize make. Source and header files are in ./src and ./include respectively. Makefile for the project is in project root directory. 
 This build supports compiling for two architectures - x86 and ARM.
 The sources to be included in the build must be added in sources.mk file.
 This file is included in Makefile using include directive.
